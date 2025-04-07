@@ -9,5 +9,4 @@ public class StreamxBeApplication {
     public static void main(String[] args) {
         SpringApplication.run(StreamxBeApplication.class, args);
     }
-
 }

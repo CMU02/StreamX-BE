@@ -1,0 +1,6 @@
+name: StreamX-BE
+
+services:
+  mysql:
+    image: "mysql:latest"
+    container_name: "streamX-MySql"
