@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: streamx_BE
+
+  config:
+    import: optional:file:.env[.properties]
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_URL}/${MYSQL_DATABASE}?serverTimezone=Asia/Seoul
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_ROOT_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  ai:
+    openai:
+      api-key: ${OPENAI_KEY}
+
+    vectorstore:
+      pinecone:
+        api-key: ${PINECONE_KEY}
+        project-id: ${PINECONE_PROJECT_ID}
+        environment: ${PINECONE_REGION}
+        index-name: stream-x

@@ -40,6 +40,5 @@ out/
 .DS_Store
 
 ### env file ###
-.env
 .env.*
-docker-compose.override.yml
+.env

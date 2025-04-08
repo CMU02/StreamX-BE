@@ -1,0 +1,12 @@
+name: StreamX-BE
+
+services:
+  mysql:
+    image: "mysql:latest"
+    container_name: "streamX-MySql"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USERNAME: ${MYSQL_USERNAME}
+    ports:
+      - "3306:3306"
