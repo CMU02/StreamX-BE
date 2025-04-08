@@ -22,6 +22,12 @@ spring:
   ai:
     openai:
       api-key: ${OPENAI_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+      embedding:
+        options:
+          model: text-embedding-3-large
 
     vectorstore:
       pinecone:
