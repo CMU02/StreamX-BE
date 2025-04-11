@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 public class ChatServiceImpl implements ChatService {
 
     private final OpenAiChatModel chatModel;
-//    private final PineconeVectorStore vectorStore;
     private final TTSClient ttsClient;
 
     @Override

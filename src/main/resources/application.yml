@@ -17,3 +17,7 @@ spring:
       hibernate:
         show_sql: false
         dialect: org.hibernate.dialect.MySQL8Dialect
+
+  ai:
+    openai:
+      api-key: ${OPENAI_KEY}
