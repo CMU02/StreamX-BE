@@ -34,6 +34,6 @@ jobs:
             --build-arg PINECONE_KEY=${{ secrets.PINECONE_KEY }} \
             --build-arg PINECONE_PROJECT_ID=${{ secrets.PINECONE_PROJECT_ID }} \
             --build-arg PINECONE_REGION=${{ secrets.PINECONE_REGION }} \
-            -t cmu02/streamx:0.0.1 .
+            -t cmu1968/streamx:0.0.1 .
           
-          docker push cmu02/streamx:0.0.1
+          docker push cmu1968/streamx:0.0.1
