@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AIResDto {
-    private String response;
+public class AIResDtoV1  {
+    private String message;
 }
