@@ -30,6 +30,7 @@ FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
 COPY --from=builder /app/build/libs/*.jar /app/streamx-0.0.1-SNAPSHOT.jar
+COPY --from=builder /app/docker-compose.yml /app/docker-compose.yml
 
 EXPOSE 8080
 
