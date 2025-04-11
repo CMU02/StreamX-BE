@@ -24,6 +24,8 @@ jobs:
 
       - name: Build and push Docker Image
         run: |
+          IMAGE_NAME="${{ secrets.DOCKERHUB_USERNAME }}/streamx:0.0.1"
+          
           docker build \
             --build-arg MYSQL_URL=${{ secrets.MYSQL_URL }} \
             --build-arg MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }} \
@@ -34,7 +36,6 @@ jobs:
             --build-arg PINECONE_KEY=${{ secrets.PINECONE_KEY }} \
             --build-arg PINECONE_PROJECT_ID=${{ secrets.PINECONE_PROJECT_ID }} \
             --build-arg PINECONE_REGION=${{ secrets.PINECONE_REGION }} \
-            -t ${{ secrets.DOCKERHUB_USERNAME }}/streamX:0.0.1 .
+            -t $IMAGE_NAME .
           
-          
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/streamX:0.0.1
+          docker push $IMAGE_NAME
