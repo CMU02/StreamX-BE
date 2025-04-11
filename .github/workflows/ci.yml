@@ -1,0 +1,40 @@
+name: Stream-CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-test-push:
+    runs-on: ubuntu-22.04
+
+    steps:
+      # 1. 소스 체크 아웃
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # 2. Docker Login
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build and push Docker Image
+        run: |
+          docker build \
+            --build-arg MYSQL_URL=${{ secrets.MYSQL_URL }} \
+            --build-arg MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }} \
+            --build-arg MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
+            --build-arg MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }} \
+            --build-arg MYSQL_PORT=${{ secrets.MYSQL_PORT }} \
+            --build-arg OPENAI_KEY=${{ secrets.OPENAI_KEY }} \
+            --build-arg PINECONE_KEY=${{ secrets.PINECONE_KEY }} \
+            --build-arg PINECONE_PROJECT_ID=${{ secrets.PINECONE_PROJECT_ID }} \
+            --build-arg PINECONE_REGION=${{ secrets.PINECONE_REGION }} \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/streamX:0.0.1 .
+          
+          
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/streamX:0.0.1
