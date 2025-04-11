@@ -4,34 +4,16 @@ spring:
 
   config:
     import: optional:file:.env[.properties]
+  profiles:
+    active: develop
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_URL}:${MYSQL_PORT}/${MYSQL_DATABASE}?serverTimezone=Asia/Seoul
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_ROOT_PASSWORD}
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create # 베타 버전 배포시 validate로 변경
     properties:
       hibernate:
-        show_sql: true
+        show_sql: false
         dialect: org.hibernate.dialect.MySQL8Dialect
-
-  ai:
-    openai:
-      api-key: ${OPENAI_KEY}
-      chat:
-        options:
-          model: gpt-4o-mini
-      embedding:
-        options:
-          model: text-embedding-3-large
-
-    vectorstore:
-      pinecone:
-        api-key: ${PINECONE_KEY}
-        project-id: ${PINECONE_PROJECT_ID}
-        environment: ${PINECONE_REGION}
-        index-name: stream-x

@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${MYSQL_URL}:${MYSQL_PORT}/${MYSQL_DATABASE}?serverTimezone=Asia/Seoul
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_ROOT_PASSWORD}
+
+  docker:
+    compose:
+      enabled: false
+
+  ai:
+    openai:
+      api-key: ${OPENAI_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+      embedding:
+        options:
+          model: text-embedding-3-large
+
+    vectorstore:
+      pinecone:
+        api-key: ${PINECONE_KEY}
+        project-id: ${PINECONE_PROJECT_ID}
+        environment: ${PINECONE_REGION}
+        index-name: stream-x
+
+tts:
+  api:
+    url: localhost:9337

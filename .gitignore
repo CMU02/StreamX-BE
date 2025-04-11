@@ -42,3 +42,6 @@ out/
 ### env file ###
 .env.*
 .env
+
+# Develop Version YML
+/src/main/resources/application-develop.yml
