@@ -36,7 +36,7 @@ public class TTSClientImpl implements TTSClient {
         HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
 
         // 4. 요청 및 응답 처리
-        ResponseEntity<Map> response = restTemplate.postForEntity(ttsApiUrl, request, Map.class);
+        ResponseEntity<Map> response = restTemplate.postForEntity("http://" + ttsApiUrl, request, Map.class);
 
         // 5. 응답에서 audioUrl 추출
         Map responseBody = response.getBody();
