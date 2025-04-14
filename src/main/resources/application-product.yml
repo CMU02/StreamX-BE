@@ -10,4 +10,4 @@ spring:
 
 tts:
   api:
-    url: localhost:9338
+    url: ${TTS_SERVER_URL}
