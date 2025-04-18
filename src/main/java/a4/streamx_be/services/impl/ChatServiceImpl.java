@@ -36,7 +36,7 @@ public class ChatServiceImpl implements ChatService {
     public AIResDtoV2 generateResponseWithTTS(AIReqDtoV2 dto) {
         String aiText = ChatClient.builder(chatModel)
                 .build()
-                .prompt()
+                .prompt(dto.getPrompt())
                 .user(dto.getMessage())
                 .call()
                 .content();
