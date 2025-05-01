@@ -29,4 +29,10 @@ public class ChatController {
         AIResDtoV2 result = chatService.generateResponseWithTTS(dto);
         return ResponseEntity.ok(result);
     }
+
+    @PostMapping("/ai/message-audio-v2")
+    public ResponseEntity<AIResDtoV2> generationV2V2(@RequestBody AIReqDtoV2 dto) {
+        AIResDtoV2 result = chatService.generateResponseWithTTSV2(dto);
+        return ResponseEntity.ok(result);
+    }
 }

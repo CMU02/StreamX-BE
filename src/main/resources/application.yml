@@ -21,3 +21,16 @@ spring:
   ai:
     openai:
       api-key: ${OPENAI_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+      embedding:
+        options:
+          model: text-embedding-3-large
+
+    vectorstore:
+      pinecone:
+        api-key: ${PINECONE_KEY}
+        project-id: ${PINECONE_PROJECT_ID}
+        environment: ${PINECONE_REGION}
+        index-name: stream-x
