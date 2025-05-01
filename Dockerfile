@@ -29,8 +29,8 @@ RUN ./gradlew clean build -x test
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
-COPY --from=builder /app/build/libs/*.jar /app/streamx-0.0.2-SNAPSHOT.jar
+COPY --from=builder /app/build/libs/*.jar /app/streamx-0.0.3-SNAPSHOT.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "streamx-0.0.2-SNAPSHOT.jar", "--spring.profiles.active=product"]
+ENTRYPOINT ["java", "-jar", "streamx-0.0.3-SNAPSHOT.jar", "--spring.profiles.active=product"]
