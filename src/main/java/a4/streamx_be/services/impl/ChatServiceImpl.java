@@ -1,30 +1,28 @@
 package a4.streamx_be.services.impl;
 
+import a4.streamx_be.configuration.CharacterConfig;
 import a4.streamx_be.domain.dto.request.AIReqDtoV1;
 import a4.streamx_be.domain.dto.request.AIReqDtoV2;
 import a4.streamx_be.domain.dto.response.AIResDtoV1;
 import a4.streamx_be.domain.dto.response.AIResDtoV2;
 import a4.streamx_be.services.ChatService;
 import a4.streamx_be.util.TTSClient;
-import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.template.st.StTemplateRenderer;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ChatServiceImpl implements ChatService {
     private final OpenAiChatModel chatModel;
     private final TTSClient ttsClient;
     private final VectorStore vectorStore;
-    private final PromptTemplate getMiyoSystemTemplate;
+    private final CharacterConfig characterConfig;
 
     @Override
     public AIResDtoV1 generateChatV1(AIReqDtoV1 dto) {
@@ -57,7 +55,7 @@ public class ChatServiceImpl implements ChatService {
 
         QuestionAnswerAdvisor qaAdvisor = QuestionAnswerAdvisor.builder(vectorStore)
                 .searchRequest(SearchRequest.builder().similarityThreshold(0.75d).topK(5).build())
-                .promptTemplate(getMiyoSystemTemplate)
+                .promptTemplate(characterConfig.getMiyoSystemTemplate())
                 .build();
 
         String aiText = ChatClient.builder(chatModel).build()
