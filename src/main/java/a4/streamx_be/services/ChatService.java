@@ -6,7 +6,12 @@ import a4.streamx_be.domain.dto.response.AIResDtoV1;
 import a4.streamx_be.domain.dto.response.AIResDtoV2;
 
 public interface ChatService {
+    @Deprecated(since = "0.0.4")
     AIResDtoV1 generateChatV1(AIReqDtoV1 dto);
+
+    @Deprecated(since = "0.0.4")
     AIResDtoV2 generateResponseWithTTS(AIReqDtoV2 dto);
+
+    @Deprecated(since = "0.0.4")
     AIResDtoV2 generateResponseWithTTSV2(AIReqDtoV2 dto);
 }

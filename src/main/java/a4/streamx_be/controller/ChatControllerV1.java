@@ -14,23 +14,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class ChatController {
+public class ChatControllerV1 {
 
     private final ChatService chatService;
 
-    @PostMapping("/ai/message")
+    @PostMapping("/ai/message-v1")
     public ResponseEntity<AIResDtoV1> generationV1(@RequestBody AIReqDtoV1 dto) {
         AIResDtoV1 result = chatService.generateChatV1(dto);
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/ai/message-audio")
+//    @PostMapping("/ai/message-audio")
     public ResponseEntity<AIResDtoV2> generationV2(@RequestBody AIReqDtoV2 dto) {
         AIResDtoV2 result = chatService.generateResponseWithTTS(dto);
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/ai/message-audio-v2")
+//    @PostMapping("/ai/message-audio-v2")
     public ResponseEntity<AIResDtoV2> generationV2V2(@RequestBody AIReqDtoV2 dto) {
         AIResDtoV2 result = chatService.generateResponseWithTTSV2(dto);
         return ResponseEntity.ok(result);
