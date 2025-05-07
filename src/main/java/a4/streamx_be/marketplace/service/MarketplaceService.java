@@ -30,19 +30,22 @@ public class MarketplaceService {
     }
 
     public MarketplaceResponse getMarketplace(Long id) {
-        return repository.findById(id)
+        return repository.findByIdAndIsDeletedFalse(id)
                 .map(this::toResponse)
                 .orElseThrow(() -> new IllegalArgumentException("Marketplace not found"));
     }
 
     public List<MarketplaceResponse> getAllMarketplaces() {
-        return repository.findAll().stream()
+        return repository.findByIsDeletedFalse().stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
 
     public void deleteMarketplace(Long id) {
-        repository.deleteById(id);
+        Marketplace entity = repository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new IllegalArgumentException("Marketplace not found"));
+        entity.setDeleted(true);
+        repository.save(entity);
     }
 
     private MarketplaceResponse toResponse(Marketplace entity) {
