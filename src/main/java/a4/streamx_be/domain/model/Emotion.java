@@ -1,4 +1,4 @@
-package a4.streamx_be.domain.dto.response;
+package a4.streamx_be.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

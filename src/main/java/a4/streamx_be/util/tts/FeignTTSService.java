@@ -1,6 +1,5 @@
-package a4.streamx_be.util.impl;
+package a4.streamx_be.util.tts;
 
-import a4.streamx_be.FeignTTSClient;
 import a4.streamx_be.exception.ErrorCode;
 import a4.streamx_be.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package a4.streamx_be.services.impl;
 
-import a4.streamx_be.domain.dto.ChatType;
+import a4.streamx_be.domain.model.ChatType;
 import a4.streamx_be.domain.dto.request.AIReqDtoV2;
 import a4.streamx_be.domain.dto.response.AIResDtoV3;
 import a4.streamx_be.services.ChatService;
