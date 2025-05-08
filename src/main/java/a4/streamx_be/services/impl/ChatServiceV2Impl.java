@@ -3,7 +3,7 @@ package a4.streamx_be.services.impl;
 import a4.streamx_be.domain.dto.ChatType;
 import a4.streamx_be.domain.dto.request.AIReqDtoV2;
 import a4.streamx_be.domain.dto.response.AIResDtoV3;
-import a4.streamx_be.services.ChatServiceV2;
+import a4.streamx_be.services.ChatService;
 import a4.streamx_be.services.ChatStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ChatServiceV2Impl implements ChatServiceV2 {
+public class ChatServiceV2Impl implements ChatService<AIReqDtoV2, AIResDtoV3> {
 
     private final List<ChatStrategy<AIReqDtoV2, AIResDtoV3>> strategies;
 
@@ -22,7 +22,7 @@ public class ChatServiceV2Impl implements ChatServiceV2 {
         return strategies.stream()
                 .filter(s -> s.supports(ChatType.RAG))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Not Support V2 Chat Strategy"))
+                .orElseThrow(() -> new IllegalArgumentException("Not Support RAG Chat Strategy"))
                 .execute(dto);
     }
 }

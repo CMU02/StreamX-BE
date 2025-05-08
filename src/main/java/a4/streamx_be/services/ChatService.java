@@ -1,17 +1,7 @@
 package a4.streamx_be.services;
 
-import a4.streamx_be.domain.dto.request.AIReqDtoV1;
-import a4.streamx_be.domain.dto.request.AIReqDtoV2;
-import a4.streamx_be.domain.dto.response.AIResDtoV1;
-import a4.streamx_be.domain.dto.response.AIResDtoV2;
+import reactor.core.publisher.Flux;
 
-public interface ChatService {
-    @Deprecated(since = "0.0.4")
-    AIResDtoV1 generateChatV1(AIReqDtoV1 dto);
-
-    @Deprecated(since = "0.0.4")
-    AIResDtoV2 generateResponseWithTTS(AIReqDtoV2 dto);
-
-    @Deprecated(since = "0.0.4")
-    AIResDtoV2 generateResponseWithTTSV2(AIReqDtoV2 dto);
+public interface ChatService<REQ, RES> {
+    Flux<RES> chat(REQ dto);
 }
