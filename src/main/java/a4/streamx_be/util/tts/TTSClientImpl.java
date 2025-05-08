@@ -1,8 +1,7 @@
-package a4.streamx_be.util.impl;
+package a4.streamx_be.util.tts;
 
 import a4.streamx_be.exception.ErrorCode;
 import a4.streamx_be.exception.NotFoundException;
-import a4.streamx_be.util.TTSClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

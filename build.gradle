@@ -6,10 +6,11 @@ plugins {
 
 ext {
     springAiVersion = "1.0.0-M8"
+    springCloudVersion = "2024.0.1"
 }
 
 group = 'A4'
-version = '0.0.3-SNAPSHOT'
+version = '0.0.4-SNAPSHOT'
 
 java {
     toolchain {
@@ -36,6 +37,9 @@ dependencies {
     implementation 'org.springframework.ai:spring-ai-starter-model-openai'
     implementation 'org.springframework.ai:spring-ai-starter-vector-store-pinecone'
     implementation 'org.springframework.ai:spring-ai-advisors-vector-store'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    testImplementation 'io.projectreactor:reactor-test'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -48,6 +52,7 @@ dependencies {
 dependencyManagement {
     imports {
         mavenBom "org.springframework.ai:spring-ai-bom:$springAiVersion"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
     }
 }
 

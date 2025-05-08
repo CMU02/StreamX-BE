@@ -1,4 +1,4 @@
-package a4.streamx_be.controller;
+package a4.streamx_be.exception.handler;
 
 import a4.streamx_be.domain.dto.ErrorResponse;
 import a4.streamx_be.exception.BaseException;
