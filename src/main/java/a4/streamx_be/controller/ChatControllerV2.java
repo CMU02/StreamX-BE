@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -25,7 +24,8 @@ public class ChatControllerV2 {
     }
 
     @PostMapping("/ai/message-audio")
-    public Flux<AIResDtoV3> chatWithTTSV2(@RequestBody AIReqDtoV2 dto) {
-        return ragChatService.chat(dto);
+    public Mono<AIResDtoV3> chatWithTTSV2(@RequestBody AIReqDtoV2 dto) {
+        return ragChatService.chat(dto)
+                .next(); // Mono 변환
     }
 }

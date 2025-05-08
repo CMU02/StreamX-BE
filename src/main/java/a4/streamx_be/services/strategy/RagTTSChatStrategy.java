@@ -75,10 +75,7 @@ public class RagTTSChatStrategy implements ChatStrategy<AIReqDtoV2, AIResDtoV3> 
             .subscribeOn(Schedulers.boundedElastic())
             // 3. Feign TTS Server 호출 (또 다른 블로킹)
             .flatMap(tuple ->
-                Mono.fromCallable(() ->
-//                                feignTTSService.getAudioUrl(tuple.getT1())
-                            "test url"
-                        )
+                Mono.fromCallable(() -> feignTTSService.getAudioUrl(tuple.getT1()))
                     .subscribeOn(Schedulers.boundedElastic())
                     // 4. 모든 결과를 모아서 DTO 생성
                     .map(audioUrl -> new AIResDtoV3(tuple.getT1(), tuple.getT2(), audioUrl, tuple.getT3()))
