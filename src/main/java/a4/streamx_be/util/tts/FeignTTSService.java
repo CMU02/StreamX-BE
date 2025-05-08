@@ -17,9 +17,9 @@ public class FeignTTSService {
      */
     public String getAudioUrl(String text) {
         Map<String, String> requestBody = Map.of("response", text);
-        Map<String, String> response = feignTTSClient.synthesize(requestBody);
+        Map<String, Object> response = feignTTSClient.synthesize(requestBody);
 
-        String audioUrl = response.get("audioUrl");
+        String audioUrl = response.get("audioUrl").toString();
         if (audioUrl == null || audioUrl.isBlank()) {
             throw new NotFoundException(ErrorCode.TTS_AUDIO_URL_NOT_FOUND);
         }

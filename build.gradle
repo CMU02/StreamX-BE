@@ -47,6 +47,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     runtimeOnly 'org.springframework.boot:spring-boot-docker-compose'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Mac OS Netty Native DNS 해석기 라이브러리 추가 (Apple Silicon Chipset)
+    implementation "io.netty:netty-resolver-dns-native-macos:4.1.99.Final:osx-aarch_64"
 }
 
 dependencyManagement {

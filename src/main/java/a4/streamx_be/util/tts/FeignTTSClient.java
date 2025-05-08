@@ -8,6 +8,6 @@ import java.util.Map;
 
 @FeignClient(name = "tts-service", url = "http://${tts.api.url}")
 public interface FeignTTSClient {
-    @PostMapping()
-    Map<String, String> synthesize(@RequestBody Map<String, String> requestBody);
+    @PostMapping("/tts")
+    Map<String, Object> synthesize(@RequestBody Map<String, String> requestBody);
 }

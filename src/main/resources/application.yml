@@ -16,7 +16,6 @@ spring:
     properties:
       hibernate:
         show_sql: false
-        dialect: org.hibernate.dialect.MySQL8Dialect
 
   ai:
     openai:
