@@ -25,7 +25,14 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/login/**", "/oauth2/**", "/api/user/me").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/login",
+                                "/login/**",
+                                "/oauth2/**",
+                                "/api/user/me",
+                                "/ai/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -35,7 +42,7 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService)
                         )
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // ✅ JWT 필터 등록
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // ✅ JWT 인증 필터 등록
 
         return http.build();
     }
