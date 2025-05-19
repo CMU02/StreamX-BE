@@ -50,6 +50,12 @@ dependencies {
 
     // Mac OS Netty Native DNS 해석기 라이브러리 추가 (Apple Silicon Chipset)
     implementation "io.netty:netty-resolver-dns-native-macos:4.1.99.Final:osx-aarch_64"
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 }
 
 dependencyManagement {
