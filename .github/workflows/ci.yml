@@ -35,7 +35,7 @@ jobs:
             --build-arg TTS_SERVER_URL=${{ secrets.TTS_SERVER_URL }} \
             --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
             --build-arg OAUTH_GOOGLE_CLIENT_SECRET=${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }} \
-            --build-arg OAUTH_GOOGLE_CLIENT_ID=${{ secrets.OAUTH_GOOGLE_CLIENT_ID }}
+            --build-arg OAUTH_GOOGLE_CLIENT_ID=${{ secrets.OAUTH_GOOGLE_CLIENT_ID }} \
             -t cmu1968/streamx:0.0.5 .
           
           docker push cmu1968/streamx:0.0.5
