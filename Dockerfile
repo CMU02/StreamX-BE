@@ -10,6 +10,10 @@ ARG PINECONE_KEY
 ARG PINECONE_PROJECT_ID
 ARG PINECONE_REGION
 ARG TTS_SERVER_URL
+ARG JWT_SECRET
+ARG OAUTH_GOOGLE_CLIENT_SECRET
+ARG OAUTH_GOOGLE_CLIENT_ID
+
 
 ENV MYSQL_URL=$MYSQL_URL \
     MYSQL_USERNAME=$MYSQL_USERNAME \
@@ -20,7 +24,10 @@ ENV MYSQL_URL=$MYSQL_URL \
     PINECONE_KEY=$PINECONE_KEY \
     PINECONE_PROJECT_ID=$PINECONE_PROJECT_ID \
     PINECONE_REGION=$PINECONE_REGION \
-    TTS_SERVER_URL=$TTS_SERVER_URL
+    TTS_SERVER_URL=$TTS_SERVER_URL \
+    JWT_SECRET=$JWT_SECRET \
+    OAUTH_GOOGLE_CLIENT_SECRET=$OAUTH_GOOGLE_CLIENT_SECRET
+    OAUTH_GOOGLE_CLIENT_ID=$OAUTH_GOOGLE_CLIENT_ID
 
 WORKDIR /app
 COPY . /app
@@ -31,8 +38,8 @@ RUN ./gradlew clean build -x test
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
-COPY --from=builder /app/build/libs/*.jar /app/streamx-0.0.4-SNAPSHOT.jar
+COPY --from=builder /app/build/libs/*.jar /app/streamx-0.0.5-SNAPSHOT.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "streamx-0.0.4-SNAPSHOT.jar", "--spring.profiles.active=product"]
+ENTRYPOINT ["java", "-jar", "streamx-0.0.5-SNAPSHOT.jar", "--spring.profiles.active=product"]
