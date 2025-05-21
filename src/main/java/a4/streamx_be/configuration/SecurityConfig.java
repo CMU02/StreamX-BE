@@ -31,6 +31,7 @@ public class SecurityConfig {
                                 "/login/**",
                                 "/oauth2/**",
                                 "/api/user/me",
+                                "/api/auth/google",
                                 "/ai/**"
                         ).permitAll()
                         .anyRequest().authenticated()
