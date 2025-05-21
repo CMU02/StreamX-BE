@@ -1,6 +1,6 @@
-package a4.streamx_be.domain.dto.response;
+package a4.streamx_be.chat.domain.dto.response;
 
-import a4.streamx_be.domain.model.Emotion;
+import a4.streamx_be.chat.domain.model.Emotion;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record AIResDtoV3(

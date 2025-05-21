@@ -1,4 +1,4 @@
-package a4.streamx_be.services;
+package a4.streamx_be.chat.services;
 
 import reactor.core.publisher.Flux;
 

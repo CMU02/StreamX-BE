@@ -1,6 +1,6 @@
 package a4.streamx_be.exception.handler;
 
-import a4.streamx_be.domain.dto.ErrorResponse;
+import a4.streamx_be.exception.ErrorResponse;
 import a4.streamx_be.exception.BaseException;
 import a4.streamx_be.exception.ErrorCode;
 import org.springframework.http.ResponseEntity;

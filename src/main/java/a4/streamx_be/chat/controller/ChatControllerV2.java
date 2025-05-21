@@ -1,10 +1,10 @@
-package a4.streamx_be.controller;
+package a4.streamx_be.chat.controller;
 
-import a4.streamx_be.domain.dto.request.AIReqDtoV1;
-import a4.streamx_be.domain.dto.request.AIReqDtoV2;
-import a4.streamx_be.domain.dto.response.AIResDtoV1;
-import a4.streamx_be.domain.dto.response.AIResDtoV3;
-import a4.streamx_be.services.ChatService;
+import a4.streamx_be.chat.domain.dto.request.AIReqDtoV1;
+import a4.streamx_be.chat.domain.dto.request.AIReqDtoV2;
+import a4.streamx_be.chat.domain.dto.response.AIResDtoV1;
+import a4.streamx_be.chat.domain.dto.response.AIResDtoV3;
+import a4.streamx_be.chat.services.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

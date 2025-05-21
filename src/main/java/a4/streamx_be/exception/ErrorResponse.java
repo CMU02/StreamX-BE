@@ -1,4 +1,4 @@
-package a4.streamx_be.domain.dto;
+package a4.streamx_be.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package a4.streamx_be.domain.dto.request;
+package a4.streamx_be.chat.domain.dto.request;
 
 import lombok.Data;
 

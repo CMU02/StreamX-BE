@@ -1,4 +1,4 @@
-package a4.streamx_be.domain.model;
+package a4.streamx_be.chat.domain.model;
 
 public enum ChatType {
     PLAIN, // 일반 채팅

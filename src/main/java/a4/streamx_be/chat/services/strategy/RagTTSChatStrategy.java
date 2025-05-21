@@ -1,11 +1,11 @@
-package a4.streamx_be.services.strategy;
+package a4.streamx_be.chat.services.strategy;
 
 import a4.streamx_be.configuration.CharacterConfig;
-import a4.streamx_be.domain.model.ChatType;
-import a4.streamx_be.domain.dto.request.AIReqDtoV2;
-import a4.streamx_be.domain.dto.response.AIResDtoV3;
-import a4.streamx_be.domain.model.Emotion;
-import a4.streamx_be.services.ChatStrategy;
+import a4.streamx_be.chat.domain.model.ChatType;
+import a4.streamx_be.chat.domain.dto.request.AIReqDtoV2;
+import a4.streamx_be.chat.domain.dto.response.AIResDtoV3;
+import a4.streamx_be.chat.domain.model.Emotion;
+import a4.streamx_be.chat.services.ChatStrategy;
 import a4.streamx_be.util.tts.FeignTTSService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

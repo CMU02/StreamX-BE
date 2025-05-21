@@ -1,6 +1,6 @@
-package a4.streamx_be.services;
+package a4.streamx_be.chat.services;
 
-import a4.streamx_be.domain.model.ChatType;
+import a4.streamx_be.chat.domain.model.ChatType;
 import reactor.core.publisher.Flux;
 
 /**

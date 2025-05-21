@@ -1,10 +1,10 @@
-package a4.streamx_be.services.impl;
+package a4.streamx_be.chat.services.impl;
 
-import a4.streamx_be.domain.model.ChatType;
-import a4.streamx_be.domain.dto.request.AIReqDtoV1;
-import a4.streamx_be.domain.dto.response.AIResDtoV1;
-import a4.streamx_be.services.ChatService;
-import a4.streamx_be.services.ChatStrategy;
+import a4.streamx_be.chat.domain.model.ChatType;
+import a4.streamx_be.chat.domain.dto.request.AIReqDtoV1;
+import a4.streamx_be.chat.domain.dto.response.AIResDtoV1;
+import a4.streamx_be.chat.services.ChatService;
+import a4.streamx_be.chat.services.ChatStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;

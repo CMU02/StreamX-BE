@@ -1,9 +1,9 @@
-package a4.streamx_be.services.strategy;
+package a4.streamx_be.chat.services.strategy;
 
-import a4.streamx_be.domain.model.ChatType;
-import a4.streamx_be.domain.dto.request.AIReqDtoV1;
-import a4.streamx_be.domain.dto.response.AIResDtoV1;
-import a4.streamx_be.services.ChatStrategy;
+import a4.streamx_be.chat.domain.model.ChatType;
+import a4.streamx_be.chat.domain.dto.request.AIReqDtoV1;
+import a4.streamx_be.chat.domain.dto.response.AIResDtoV1;
+import a4.streamx_be.chat.services.ChatStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.openai.OpenAiChatModel;
