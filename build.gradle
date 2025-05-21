@@ -10,7 +10,7 @@ ext {
 }
 
 group = 'A4'
-version = '0.0.4-SNAPSHOT'
+version = '0.0.5-SNAPSHOT'
 
 java {
     toolchain {
