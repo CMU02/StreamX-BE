@@ -18,12 +18,11 @@ public class GlobalExceptionController {
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ErrorResponse> handleBaseException(BaseException e) {
         ErrorCode errorCode = e.getErrorCode();
-
-        ErrorResponse response = new ErrorResponse(
-                errorCode.getStatus().value(),
-                errorCode.getMessage(),
-                LocalDateTime.now()
-        );
+        ErrorResponse response = ErrorResponse.builder()
+                .code(errorCode.getStatus().value())
+                .message(errorCode.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
 
         return ResponseEntity.status(errorCode.getStatus()).body(response);
     }
