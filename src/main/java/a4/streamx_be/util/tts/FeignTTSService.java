@@ -2,9 +2,12 @@ package a4.streamx_be.util.tts;
 
 import a4.streamx_be.exception.ErrorCode;
 import a4.streamx_be.exception.NotFoundException;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.Map;
 
 @Service
@@ -17,13 +20,18 @@ public class FeignTTSService {
      */
     public String getAudioUrl(String text) {
         Map<String, String> requestBody = Map.of("response", text);
-        Map<String, Object> response = feignTTSClient.synthesize(requestBody);
+        try {
+            Map<String, Object> response = feignTTSClient.synthesize(requestBody);
+            String audioUrl = response.get("audioUrl").toString();
+            if (audioUrl == null || audioUrl.isBlank()) {
+                throw new NotFoundException(ErrorCode.TTS_AUDIO_URL_NOT_FOUND);
+            }
 
-        String audioUrl = response.get("audioUrl").toString();
-        if (audioUrl == null || audioUrl.isBlank()) {
+            return audioUrl;
+        } catch (FeignException e) {
+            throw new NotFoundException(ErrorCode.TTS_SERVER_CONNECTION_ERROR);
+        } catch (Exception e) {
             throw new NotFoundException(ErrorCode.TTS_AUDIO_URL_NOT_FOUND);
         }
-
-        return audioUrl;
     }
 }
