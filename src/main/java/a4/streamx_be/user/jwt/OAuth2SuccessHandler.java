@@ -29,8 +29,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         // JWT 토큰 생성
         String token = jwtTokenProvider.generateToken(email);
 
-        // Unity 앱으로 리디렉션하면서 토큰을 URL에 포함
-        String redirectUri = "streamxunity://callback?token=" + token;
+        // PC Test URL 작성
+        String redirectUri = "http://localhost:5000/oauth/callback?token=" + token;
+
         response.sendRedirect(redirectUri);
     }
 }
