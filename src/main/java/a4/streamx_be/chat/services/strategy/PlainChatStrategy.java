@@ -1,47 +1,39 @@
 package a4.streamx_be.chat.services.strategy;
 
-import a4.streamx_be.chat.domain.model.ChatType;
 import a4.streamx_be.chat.domain.dto.request.AIReqDtoV1;
-import a4.streamx_be.chat.domain.dto.response.AIResDtoV1;
+import a4.streamx_be.chat.domain.dto.response.AIResDtoV3;
+import a4.streamx_be.chat.domain.model.ChatType;
 import a4.streamx_be.chat.services.ChatStrategy;
+import a4.streamx_be.util.RagChatProcessor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 /**
- * 일반 채팅 전략
+ * 일반 채팅 + RAG 전략
  */
 @Component
 @RequiredArgsConstructor
-public class PlainChatStrategy implements ChatStrategy<AIReqDtoV1, AIResDtoV1> {
+public class PlainChatStrategy implements ChatStrategy<AIReqDtoV1, AIResDtoV3> {
 
-    private final OpenAiChatModel chatModel;
+    private final RagChatProcessor processor;
 
     @Override
     public Boolean supports(ChatType type) {
-        return type.equals(ChatType.PLAIN);
+        return type.equals(ChatType.PLAIN_RAG);
     }
 
     @Override
-    public Flux<AIResDtoV1> execute(AIReqDtoV1 dto) {
-        return Mono.fromCallable(() -> {
-            String aiText = ChatClient.builder(chatModel).build()
-                    .prompt(dto.prompt())
-                    .user(dto.message())
-                    .call()
-                    .content();
-
-            return new AIResDtoV1(aiText);
-        })
-        /*
-          Reactor에서 블로킹 호출 (ex: 외부 API 호출, 파일 I/O, DB 쿼리)을 안전하게
-          처리하기 위해 "별도의 스레드 풀"에서 실행하도록 지정해주는 역할
-         */
-        .subscribeOn(Schedulers.boundedElastic())
-        .flux();
+    public Flux<AIResDtoV3> execute(AIReqDtoV1 dto) {
+        return Mono.fromCallable(() -> processor.processRagChat(dto.message()))
+        .map(tuple ->
+                AIResDtoV3.builder()
+                        .aiText(tuple.getT1())
+                        .emotion(tuple.getT2())
+                        .audioUrl(null)
+                        .animation(tuple.getT3())
+                        .build()
+        ).flux();
     }
 }

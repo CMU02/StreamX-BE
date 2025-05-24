@@ -5,6 +5,8 @@ import a4.streamx_be.chat.domain.dto.request.AIReqDtoV2;
 import a4.streamx_be.chat.domain.dto.response.AIResDtoV3;
 import a4.streamx_be.chat.services.ChatService;
 import a4.streamx_be.chat.services.ChatStrategy;
+import a4.streamx_be.exception.ErrorCode;
+import a4.streamx_be.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -20,9 +22,9 @@ public class ChatServiceV2Impl implements ChatService<AIReqDtoV2, AIResDtoV3> {
     @Override
     public Flux<AIResDtoV3> chat(AIReqDtoV2 dto) {
         return strategies.stream()
-                .filter(s -> s.supports(ChatType.RAG))
+                .filter(s -> s.supports(ChatType.RAG_TTS))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Not Support RAG Chat Strategy"))
+                .orElseThrow(() -> new NotFoundException(ErrorCode.RAG_TTS_NOT_SUPPORT))
                 .execute(dto);
     }
 }
