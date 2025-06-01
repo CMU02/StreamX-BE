@@ -1,9 +1,13 @@
 package a4.streamx_be.user.service;
 
-import a4.streamx_be.user.domain.User;
+import a4.streamx_be.user.domain.entity.User;
 import a4.streamx_be.user.repository.UserRepository;
+import a4.streamx_be.util.SocialSignInUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -21,6 +25,8 @@ import java.util.Map;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final UserRepository userRepository;
+    private final SocialSignInUtils socialSignInUtils;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -37,13 +43,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         User user = userRepository.findByProviderAndProviderId(provider, providerId)
                 .orElseGet(() -> userRepository.save(
                         User.builder()
-                                .username(name)
+                                .displayName(name)
                                 .email(email)
-                                .picture(picture)
-                                .provider(provider)
+                                .photoUrl(picture)
+                                .provider(socialSignInUtils.getSignedInProvider(provider))
                                 .providerId(providerId)
-                                .password("oauth") // OAuth용 dummy 비밀번호
-                                .createdAt(LocalDateTime.now())
+                                .password(passwordEncoder.encode("OAUTH2_USER")) // OAuth용 dummy 비밀번호
+//                                .createdAt(LocalDateTime.now())
                                 .build()
                 ));
 
@@ -52,5 +58,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 attributes,
                 "sub"
         );
+    }
+
+    @Bean
+    private PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

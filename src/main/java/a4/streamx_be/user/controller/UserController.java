@@ -1,6 +1,6 @@
 package a4.streamx_be.user.controller;
 
-import a4.streamx_be.user.domain.User;
+import a4.streamx_be.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +21,9 @@ public class UserController {
         }
 
         return ResponseEntity.ok(Map.of(
-                "username", user.getUsername(),
+                "displayName", user.getUsername(),
                 "email", user.getEmail(),
-                "picture", user.getPicture()
+                "photoUrl", user.getPhotoUrl()
         ));
     }
 }
