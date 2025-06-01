@@ -1,4 +1,4 @@
-package a4.streamx_be.domain.model;
+package a4.streamx_be.chat.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
