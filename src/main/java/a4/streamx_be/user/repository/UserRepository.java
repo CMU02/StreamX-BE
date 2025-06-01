@@ -1,7 +1,7 @@
 
 package a4.streamx_be.user.repository;
 
-import a4.streamx_be.user.domain.User;
+import a4.streamx_be.user.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
