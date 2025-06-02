@@ -18,7 +18,7 @@ import java.util.*;
 public class User implements UserDetails {
 
     @Id
-    @Column(name = "user_uid")
+    @Column(name = "user_uid", columnDefinition = "BINARY(16)")
     private UUID uid;
 
     @Column(nullable = false, name = "display_name")
@@ -89,5 +89,13 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return getDisplayName();
+    }
+
+    public void assignMetaData(MetaData metaData) {
+        this.metaData = metaData;
+    }
+
+    public void assignMemberShip(MemberShip memberShip) {
+        this.memberShip = memberShip;
     }
 }
