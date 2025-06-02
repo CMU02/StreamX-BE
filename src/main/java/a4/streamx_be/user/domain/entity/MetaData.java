@@ -25,7 +25,7 @@ public class MetaData {
     private Instant creationTime; // 생성 시간
 
     @Column(columnDefinition = "TIMESTAMP")
-    private Instant lastSignTime; // 마지막 로그인 시간
+    private Instant lastSignInTime; // 마지막 로그인 시간
 
     @UpdateTimestamp
     @Column(name = "update_time")
