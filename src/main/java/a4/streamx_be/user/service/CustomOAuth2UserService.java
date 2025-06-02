@@ -4,9 +4,7 @@ import a4.streamx_be.user.domain.entity.User;
 import a4.streamx_be.user.repository.UserRepository;
 import a4.streamx_be.util.SocialSignInUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -16,9 +14,9 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +41,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         User user = userRepository.findByProviderAndProviderId(provider, providerId)
                 .orElseGet(() -> userRepository.save(
                         User.builder()
+                                .uid(UUID.randomUUID())
                                 .displayName(name)
                                 .email(email)
                                 .photoUrl(picture)
@@ -58,10 +57,5 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 attributes,
                 "sub"
         );
-    }
-
-    @Bean
-    private PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

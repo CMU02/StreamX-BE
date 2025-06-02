@@ -12,6 +12,7 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberShip {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "membership_id")
     private Long id;
 
     @Enumerated(value = EnumType.STRING)
