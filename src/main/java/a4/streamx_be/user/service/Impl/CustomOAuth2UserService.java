@@ -1,8 +1,8 @@
-package a4.streamx_be.user.service;
+package a4.streamx_be.user.service.Impl;
 
 import a4.streamx_be.user.domain.entity.User;
 import a4.streamx_be.user.repository.UserRepository;
-import a4.streamx_be.util.SocialSignInUtils;
+import a4.streamx_be.util.SignInUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +23,7 @@ import java.util.UUID;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final UserRepository userRepository;
-    private final SocialSignInUtils socialSignInUtils;
+    private final SignInUtils signInUtils;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -45,7 +45,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                                 .displayName(name)
                                 .email(email)
                                 .photoUrl(picture)
-                                .provider(socialSignInUtils.getSignedInProvider(provider))
+                                .provider(signInUtils.getSignedInProvider(provider))
                                 .providerId(providerId)
                                 .password(passwordEncoder.encode("OAUTH2_USER")) // OAuth용 dummy 비밀번호
 //                                .createdAt(LocalDateTime.now())
