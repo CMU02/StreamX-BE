@@ -2,7 +2,7 @@ package a4.streamx_be.configuration;
 
 import a4.streamx_be.user.jwt.JwtAuthenticationFilter;
 import a4.streamx_be.user.jwt.OAuth2SuccessHandler;
-import a4.streamx_be.user.service.CustomOAuth2UserService;
+import a4.streamx_be.user.service.Impl.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +31,7 @@ public class SecurityConfig {
                                 "/login/**",
                                 "/oauth2/**",
                                 "/api/user/me",
+                                "/api/auth/*",
                                 "/ai/**"
                         ).permitAll()
                         .anyRequest().authenticated()
