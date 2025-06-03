@@ -4,7 +4,9 @@ import a4.streamx_be.chat.domain.dto.request.AIReqDtoV1;
 import a4.streamx_be.chat.domain.dto.request.AIReqDtoV2;
 import a4.streamx_be.chat.domain.dto.response.AIResDtoV3;
 import a4.streamx_be.chat.services.ChatService;
+import a4.streamx_be.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,14 +19,14 @@ public class ChatControllerV2 {
     private final ChatService<AIReqDtoV2, AIResDtoV3> ragChatService;
 
     @PostMapping("/ai/message")
-    public Mono<AIResDtoV3> chatV1(@RequestBody AIReqDtoV1 dto) {
-        return plainChatService.chat(dto)
+    public Mono<AIResDtoV3> chatV1(@RequestBody AIReqDtoV1 dto, @AuthenticationPrincipal User user) {
+        return plainChatService.chat(dto, user)
                 .next(); // Mono 변환
     }
 
     @PostMapping("/ai/message-audio")
-    public Mono<AIResDtoV3> chatWithTTSV2(@RequestBody AIReqDtoV2 dto) {
-        return ragChatService.chat(dto)
+    public Mono<AIResDtoV3> chatWithTTSV2(@RequestBody AIReqDtoV2 dto, @AuthenticationPrincipal User user) {
+        return ragChatService.chat(dto, user)
                 .next(); // Mono 변환
     }
 }

@@ -7,6 +7,9 @@ import a4.streamx_be.chat.services.ChatService;
 import a4.streamx_be.chat.services.ChatStrategy;
 import a4.streamx_be.exception.ErrorCode;
 import a4.streamx_be.exception.NotFoundException;
+import a4.streamx_be.user.domain.entity.User;
+import a4.streamx_be.user.repository.UserRepository;
+import a4.streamx_be.user.service.UsageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -18,9 +21,17 @@ import java.util.List;
 public class ChatServiceV1Impl implements ChatService<AIReqDtoV1, AIResDtoV3> {
 
     private final List<ChatStrategy<AIReqDtoV1, AIResDtoV3>> strategies;
+    private final UsageService usageService;
+    private final UserRepository userRepository;
 
     @Override
-    public Flux<AIResDtoV3> chat(AIReqDtoV1 dto) {
+    public Flux<AIResDtoV3> chat(AIReqDtoV1 dto, User user) {
+        // 사용량 한도 검증 + 증가 (Redis만 업데이트)\
+        User findUser = userRepository.findByUid(user.getUid())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+
+        usageService.recordChatUsage(findUser);
+
         return strategies.stream()
                 .filter(s -> s.supports(ChatType.PLAIN_RAG))
                 .findFirst()
