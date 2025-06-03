@@ -82,9 +82,10 @@ public enum ErrorCode {
     /**
      * 필수 입력 항목이 누락되었습니다.
      */
-    REQUIRED_FIELD_MISSING(BAD_REQUEST, "A Required Field Is Missing");
+    REQUIRED_FIELD_MISSING(BAD_REQUEST, "A Required Field Is Missing"),
 
-
+    EXCEEDED_USAGE_CHAT_LIMIT(BAD_REQUEST, "Usage Chat Limit Exceeded"),
+    EXCEEDED_USAGE_TTS_LIMIT(BAD_REQUEST, "Usage TTS Limit Exceeded");
     private final HttpStatus status;
     private final String message;
 }
