@@ -18,15 +18,15 @@ public class MemberShipGenerated {
 
         MemberShip freeMembership = MemberShip.builder()
                 .memberShipType(MemberShipType.FREE)
-                .dailyChatLimit(45L)
-                .dailyTtsLimit(0L)
+                .weeklyChatLimit(300L)
+                .weeklyTtsLimit(0L)
                 .monthlyPrice(0L)
                 .build();
 
         MemberShip ProMembership = MemberShip.builder()
                 .memberShipType(MemberShipType.PRO)
-                .dailyChatLimit(-1L)
-                .dailyTtsLimit(20L)
+                .weeklyChatLimit(-1L)
+                .weeklyTtsLimit(140L)
                 .monthlyPrice(15000L)
                 .build();
 

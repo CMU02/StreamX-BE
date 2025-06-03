@@ -20,13 +20,13 @@ public class MemberShip {
     private MemberShipType memberShipType = MemberShipType.FREE; // "FREE", "PRO"
 
     // 일일 텍스트 채팅 한도 (-1 == Unlimit)
-    // Free : 45, Pro : Unlimit
-    @Column(name = "daily_chat_limit")
-    private Long dailyChatLimit;
+    // Free : 300, Pro : -1
+    @Column(name = "weekly_chat_limit")
+    private Long weeklyChatLimit;
 
-    // 일일 TTS 한도 : 20 (Pro 한정)
-    @Column(name = "daily_tts_limit")
-    private Long dailyTtsLimit;
+    // 일일 TTS 한도 : 140회 (Pro 한정)
+    @Column(name = "weekly_tts_limit")
+    private Long weeklyTtsLimit;
 
     // 월 정가 (원화, VAT 별도)
     @ColumnDefault("0")
