@@ -5,17 +5,17 @@ import a4.streamx_be.exception.UsageLimitExceededException;
 import a4.streamx_be.user.domain.entity.MemberShip;
 import a4.streamx_be.user.domain.entity.User;
 import a4.streamx_be.user.service.UsageService;
+import a4.streamx_be.util.Field;
+import a4.streamx_be.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,42 +26,32 @@ import java.util.concurrent.TimeUnit;
 public class RecordUsageService implements UsageService {
 
     private final RedisTemplate<String, String> defaultRedisTemplate;
-
-    // Redis Hash 필드명 상수
-    private static final String FIELD_CHAT = "chatCount";
-    private static final String FIELD_TTS = "ttsCount";
+    private final RedisUtil redisUtil;
 
     @Override
     public void recordChatUsage(User user) throws UsageLimitExceededException {
         MemberShip memberShip = user.getMemberShip();
+        HashOperations<String, Object, Object> hashOps = defaultRedisTemplate.opsForHash();
 
-        String redisKey = makeRedisKey(user.getUid());
+        String redisKey = redisUtil.makeRedisKey(user.getUid(), true);
         Long weeklyChatLimit = memberShip.getWeeklyChatLimit();// -1 일 경우 무제한
-        Long currentChatCount = getCurrentCount(redisKey, FIELD_CHAT);
+        Long currentChatCount = redisUtil.getCurrentCount(redisKey, Field.CHAT, hashOps);
 
-        checkWeeklyLimit(weeklyChatLimit, currentChatCount, FIELD_CHAT);
-        incrementCountRedis(redisKey, FIELD_CHAT, currentChatCount);
+        checkWeeklyLimit(weeklyChatLimit, currentChatCount, Field.CHAT);
+        incrementCountRedis(redisKey, Field.CHAT, currentChatCount);
     }
 
     @Override
     public void recordTtsUsage(User user) throws UsageLimitExceededException {
         MemberShip memberShip = user.getMemberShip();
+        HashOperations<String, Object, Object> hashOps = defaultRedisTemplate.opsForHash();
 
-        String redisKey = makeRedisKey(user.getUid());
+        String redisKey = redisUtil.makeRedisKey(user.getUid(), true);
         Long weeklyTtsLimit = memberShip.getWeeklyTtsLimit();
-        Long currentTTSCount = getCurrentCount(redisKey, FIELD_TTS);
+        Long currentTTSCount = redisUtil.getCurrentCount(redisKey, Field.TTS, hashOps);
 
-        checkWeeklyLimit(weeklyTtsLimit, currentTTSCount, FIELD_TTS);
-        incrementCountRedis(redisKey, FIELD_TTS, currentTTSCount);
-    }
-
-    /**
-     * Redis Key 생성 "usage:{userUid}:{yyyyMMdd}"
-     */
-    private String makeRedisKey(UUID userUid) {
-        LocalDate utcToday = LocalDate.now(ZoneOffset.UTC);
-        String yyyyMMdd = utcToday.format(DateTimeFormatter.BASIC_ISO_DATE);
-        return String.format("usage:%s:%s", userUid.toString(), yyyyMMdd);
+        checkWeeklyLimit(weeklyTtsLimit, currentTTSCount, Field.TTS);
+        incrementCountRedis(redisKey, Field.TTS, currentTTSCount);
     }
 
     /**
@@ -75,33 +65,6 @@ public class RecordUsageService implements UsageService {
         return Duration.between(now, utcTomorrowMidnight).getSeconds();
     }
 
-    /**
-     * Redis Hash에서 주어진 키({@code redisKey})와 필드({@code field})에 해당하는 현재 카운트 값을 조회합니다. <br/>
-     * - 필드명이 {@code FIELD_CHAT}인 경우에는 채팅 사용량 카운트를, <br/>
-     * - 필드명이 {@code FIELD_TTS}인 경우에는 TTS 사용량 카운트를 반환합니다. <br/>
-     * - 해당 필드 값이 없거나 비어 있으면 0L로 반환합니다.
-     * @param redisKey Redis Hash의 키 값 (예시 : "usage:{userUid}:{yyyyMMdd}")
-     * @param field 조회할 필드명 ({@code FIELD_CHAT} or {@code FIELD_TTS})
-     * @return 해당 필드의 카운트(Long), 값이 없을 경우 0L 반환
-     */
-    private Long getCurrentCount(String redisKey, String field) {
-        switch (field) {
-            case FIELD_CHAT -> {
-                Object currentChatObj = defaultRedisTemplate.opsForHash().get(redisKey, FIELD_CHAT);
-                String currentChatStr = currentChatObj != null ? currentChatObj.toString() : null;
-
-                return StringUtils.hasText(currentChatStr) ? Long.parseLong(currentChatStr) : 0L;
-            }
-            case FIELD_TTS -> {
-                Object currentTTSObj = defaultRedisTemplate.opsForHash().get(redisKey, FIELD_TTS);
-                String currentTtsStr = currentTTSObj != null ? currentTTSObj.toString() : null;
-
-                return StringUtils.hasText(currentTtsStr) ? Long.parseLong(currentTtsStr) : 0L;
-            }
-        }
-
-        return 0L;
-    }
 
     /**
      * 주간 사용 한도를 초과했는지 확인하는 메서드입니다. <br /><br/>
@@ -113,12 +76,11 @@ public class RecordUsageService implements UsageService {
      * @param field {@code FIELD_CHAT} or {@code FIELD_TTS}
      * @throws UsageLimitExceededException 사용량이 주간 한도를 초과한 경우 예외 발생
      */
-    private void checkWeeklyLimit(Long weeklyLimit, Long currentCount, String field) {
+    private void checkWeeklyLimit(Long weeklyLimit, Long currentCount, Field field) {
         if (weeklyLimit != -1 && currentCount >= 0) {
             if (currentCount >= weeklyLimit) {
-                // 남은 횟수
-                String countRemaining = String.valueOf(weeklyLimit - currentCount);
-                if (field.equals(FIELD_CHAT)) {
+                String countRemaining = String.valueOf(weeklyLimit - currentCount); // 남은 횟수
+                if (field.equals(Field.CHAT)) {
                     throw new UsageLimitExceededException(ErrorCode.EXCEEDED_USAGE_CHAT_LIMIT, "남은 횟수:" + countRemaining);
                 } else {
                     throw new UsageLimitExceededException(ErrorCode.EXCEEDED_USAGE_TTS_LIMIT, "남은 횟수: " + countRemaining);
@@ -136,15 +98,15 @@ public class RecordUsageService implements UsageService {
      * @param field 증가시킬 필드명 (예: {@code FIELD_CHAT} 또는 {@code FIELD_TTS})
      * @param currentCount 현재까지의 사용량 (필드가 없을 경우 초기값으로 사용됨)
      */
-    private void incrementCountRedis(String redisKey, String field, Long currentCount) {
+    private void incrementCountRedis(String redisKey, Field field, Long currentCount) {
         Boolean hasField = defaultRedisTemplate.opsForHash().hasKey(redisKey, field);
         if (!hasField) {
-            defaultRedisTemplate.opsForHash().put(redisKey, field, String.valueOf(currentCount + 1));
+            defaultRedisTemplate.opsForHash().put(redisKey, field.getValue(), String.valueOf(currentCount + 1));
 
             Long secondsToMidnight = getSecondsUntilNextYUtcMidnight();
             defaultRedisTemplate.expire(redisKey, secondsToMidnight, TimeUnit.SECONDS);
         } else {
-            defaultRedisTemplate.opsForHash().increment(redisKey, field, 1L);
+            defaultRedisTemplate.opsForHash().increment(redisKey, field.getValue(), 1L);
         }
     }
 }
