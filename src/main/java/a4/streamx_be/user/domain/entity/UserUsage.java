@@ -30,4 +30,12 @@ public class UserUsage {
     // TTS 사용 카운트
     @Column(nullable = false)
     private Long ttsCount = 0L;
+
+    public void changeChatCount(Long count) {
+        chatCount += count;
+    }
+
+    public void changeTtsCount(Long count) {
+        ttsCount += count;
+    }
 }
