@@ -44,7 +44,7 @@ public enum ErrorCode {
     /**
      * 사용자를 찾을 수 없습니다.
      */
-    USER_NOT_FOUND(UNAUTHORIZED, "User Not Found"),
+    USER_NOT_FOUND(NOT_FOUND, "User Not Found"),
     /**
      * 비밀번호가 일치하지 않습니다.
      */
