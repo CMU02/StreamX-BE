@@ -99,7 +99,7 @@ public class RecordUsageService implements UsageService {
      * @param currentCount 현재까지의 사용량 (필드가 없을 경우 초기값으로 사용됨)
      */
     private void incrementCountRedis(String redisKey, Field field, Long currentCount) {
-        Boolean hasField = defaultRedisTemplate.opsForHash().hasKey(redisKey, field);
+        Boolean hasField = defaultRedisTemplate.opsForHash().hasKey(redisKey, field.getValue());
         if (!hasField) {
             defaultRedisTemplate.opsForHash().put(redisKey, field.getValue(), String.valueOf(currentCount + 1));
 
