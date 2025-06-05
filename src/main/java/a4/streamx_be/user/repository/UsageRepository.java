@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface UsageRepository extends JpaRepository<UserUsage, Long> {
     Optional<UserUsage> findByUserAndUsageTime(User user, Instant usageTime);
+
+    Optional<UserUsage> findByUser(User user);
 }

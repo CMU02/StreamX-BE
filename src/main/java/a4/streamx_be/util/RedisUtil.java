@@ -2,7 +2,6 @@ package a4.streamx_be.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -59,6 +58,14 @@ public class RedisUtil {
         }
 
         return 0L;
+    }
+
+    public Long isValidRemaining(Long currentCount, Long weeklyLimit) {
+        if (weeklyLimit != -1 && weeklyLimit >= 0) {
+            return weeklyLimit - currentCount;
+        }
+
+        return -1L;
     }
 
     /**

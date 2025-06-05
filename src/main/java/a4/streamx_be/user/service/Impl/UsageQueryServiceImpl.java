@@ -1,6 +1,9 @@
 package a4.streamx_be.user.service.Impl;
 
+import a4.streamx_be.exception.ErrorCode;
+import a4.streamx_be.exception.NotFoundException;
 import a4.streamx_be.user.domain.dto.response.UsageResponse;
+import a4.streamx_be.user.domain.entity.MemberShip;
 import a4.streamx_be.user.domain.entity.User;
 import a4.streamx_be.user.domain.entity.UserUsage;
 import a4.streamx_be.user.repository.UsageRepository;
@@ -35,12 +38,49 @@ public class UsageQueryServiceImpl implements UsageQueryService {
     private final RedisUtil redisUtil;
 
     @Override
-    public UsageResponse getUsage(UUID userUid) {
-        return null;
+    public UsageResponse getUsage(User user) {
+        // usage:userUid:20250604
+        String redisKey = redisUtil.makeRedisKey(user.getUid(), true);
+        HashOperations<String, Object, Object> hashOps = defaultRedisTemplate.opsForHash();
+
+        User findUser = userRepository.findById(user.getUid())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+
+        // 멤버집에서 주간 한도 조회
+        MemberShip memberShip = findUser.getMemberShip();
+        Long weeklyTtsLimit = memberShip.getWeeklyTtsLimit();
+        Long weeklyChatLimit = memberShip.getWeeklyChatLimit();
+
+        // Redis에 두 필드 (chatCount, ttsCount)가 모두 있으면 Redis 값으로 리턴
+        Boolean hasChatInRedis = hashOps.hasKey(redisKey, Field.CHAT.getValue());
+        Boolean hasTtsInRedis = hashOps.hasKey(redisKey, Field.TTS.getValue());
+
+        if (hasChatInRedis || hasTtsInRedis) {
+            Long currentChatCount = redisUtil.getCurrentCount(redisKey, Field.CHAT, hashOps);
+            Long currentTtsCount = redisUtil.getCurrentCount(redisKey, Field.TTS, hashOps);
+
+            Long chatRemaining = redisUtil.isValidRemaining(currentChatCount, weeklyChatLimit);
+            Long ttsRemaining = redisUtil.isValidRemaining(currentTtsCount, weeklyTtsLimit);
+
+            return new UsageResponse(currentChatCount, currentTtsCount, chatRemaining, ttsRemaining);
+        } else {
+            // Redis에 값이 없으면 MySQL 조회
+            // Optional 대신에, 없으면 404 NotFound 으로 처리
+            UserUsage usage = usageRepository.findByUser(findUser)
+                    .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+
+            Long currentChatCount = usage.getChatCount();
+            Long currentTtsCount = usage.getTtsCount();
+
+            Long chatRemaining = redisUtil.isValidRemaining(currentChatCount, weeklyChatLimit);
+            Long ttsRemaining = redisUtil.isValidRemaining(currentTtsCount, weeklyTtsLimit);
+
+            return new UsageResponse(currentChatCount, currentTtsCount, chatRemaining, ttsRemaining);
+        }
     }
 
-//    @Scheduled(cron = "*/30 * * * * *", zone = "UTC") // 테스트용 30초마다
-    @Scheduled(cron = "0 0 1 * * *", zone = "UTC") // 매일 새벽 1시 집계
+    @Scheduled(cron = "*/30 * * * * *", zone = "UTC") // 테스트용 30초마다
+//    @Scheduled(cron = "0 0 1 * * *", zone = "UTC") // 매일 새벽 1시 집계
     public void syncDailyUsageFromRedisToMySql() {
         // example: usage:*:20250604
         String redisKey = redisUtil.makeRedisKey(null, false);
