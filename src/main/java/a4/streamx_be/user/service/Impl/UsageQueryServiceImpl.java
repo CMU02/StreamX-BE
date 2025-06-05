@@ -78,9 +78,8 @@ public class UsageQueryServiceImpl implements UsageQueryService {
             return new UsageResponse(currentChatCount, currentTtsCount, chatRemaining, ttsRemaining);
         }
     }
-
-    @Scheduled(cron = "*/30 * * * * *", zone = "UTC") // 테스트용 30초마다
-//    @Scheduled(cron = "0 0 1 * * *", zone = "UTC") // 매일 새벽 1시 집계
+//    @Scheduled(cron = "*/30 * * * * *", zone = "UTC") // 테스트용 30초마다
+    @Scheduled(cron = "0 0 1 * * *", zone = "UTC") // 매일 새벽 1시 집계
     public void syncDailyUsageFromRedisToMySql() {
         // example: usage:*:20250604
         String redisKey = redisUtil.makeRedisKey(null, false);
