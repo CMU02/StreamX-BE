@@ -10,3 +10,10 @@ services:
       MYSQL_USERNAME: ${MYSQL_USERNAME}
     ports:
       - "3306:3306"
+
+  redis:
+    image: "redis:latest"
+    container_name: "streamX-Redis"
+    #TODO 추후 Reids에 비밀번호를 걸 것
+    ports:
+      - "6379:6379"

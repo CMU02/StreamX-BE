@@ -1,6 +1,6 @@
 package a4.streamx_be.user.jwt;
 
-import a4.streamx_be.user.domain.User;
+import a4.streamx_be.user.domain.entity.User;
 import a4.streamx_be.user.repository.UserRepository;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
