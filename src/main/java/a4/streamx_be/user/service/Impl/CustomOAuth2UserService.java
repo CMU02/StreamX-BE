@@ -1,12 +1,16 @@
-package a4.streamx_be.user.service;
+package a4.streamx_be.user.service.Impl;
 
+import a4.streamx_be.exception.ErrorCode;
+import a4.streamx_be.exception.NotFoundException;
+import a4.streamx_be.user.domain.entity.MemberShip;
+import a4.streamx_be.user.domain.entity.MetaData;
 import a4.streamx_be.user.domain.entity.User;
+import a4.streamx_be.user.domain.model.MemberShipType;
+import a4.streamx_be.user.repository.MemberShipRepository;
 import a4.streamx_be.user.repository.UserRepository;
-import a4.streamx_be.util.SocialSignInUtils;
+import a4.streamx_be.util.SignInUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -16,16 +20,18 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final UserRepository userRepository;
-    private final SocialSignInUtils socialSignInUtils;
+    private final MemberShipRepository memberShipRepository;
+    private final SignInUtils signInUtils;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -40,18 +46,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String picture = attributes.get("picture") != null ? attributes.get("picture").toString() : null;
 
         // 사용자 저장 또는 조회
-        User user = userRepository.findByProviderAndProviderId(provider, providerId)
-                .orElseGet(() -> userRepository.save(
-                        User.builder()
-                                .displayName(name)
-                                .email(email)
-                                .photoUrl(picture)
-                                .provider(socialSignInUtils.getSignedInProvider(provider))
-                                .providerId(providerId)
-                                .password(passwordEncoder.encode("OAUTH2_USER")) // OAuth용 dummy 비밀번호
-//                                .createdAt(LocalDateTime.now())
-                                .build()
-                ));
+        User user = oauth2UserBuilder(provider, providerId, name, email, picture);
+        userRepository.save(user);
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
@@ -60,8 +56,32 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         );
     }
 
-    @Bean
-    private PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    private User oauth2UserBuilder(String provider, String providerId, String name, String email, String picture) {
+        MemberShip memberShip = memberShipRepository.findByMemberShipType(MemberShipType.FREE)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+
+        UUID userUid = UUID.randomUUID();
+        String oauth2Password = passwordEncoder.encode("OAUTH2_USER");
+
+        User oauthUser = User.builder()
+                .uid(userUid)
+                .displayName(name)
+                .email(email)
+                .providerId(providerId)
+                .provider(signInUtils.getSignedInProvider(provider))
+                .password(oauth2Password)
+                .phoneNumber(null)
+                .photoUrl(picture)
+                .memberShip(memberShip)
+                .build();
+
+        MetaData metaData = MetaData.builder()
+                .user(oauthUser)
+                .creationTime(Instant.now())
+                .lastSignInTime(Instant.now())
+                .build();
+
+        oauthUser.assignMetaData(metaData);
+        return oauthUser;
     }
 }

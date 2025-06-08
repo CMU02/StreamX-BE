@@ -7,21 +7,18 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.*;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_uid")
+    @Column(name = "user_uid", columnDefinition = "BINARY(16)")
     private UUID uid;
 
     @Column(nullable = false, name = "display_name")
@@ -33,7 +30,7 @@ public class User implements UserDetails {
     @Column(nullable = false, name = "password")
     private String password;
 
-    @Column(nullable = false, name = "phone_number")
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Column(name = "photo_url")
@@ -52,12 +49,12 @@ public class User implements UserDetails {
 
     // MemberShip(현재 플랜) - FK
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "current_membership_id")
+    @JoinColumn(name = "membership_id")
     private MemberShip memberShip;
 
     // 사용량
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Usage> usages = new ArrayList<>();
+    private List<UserUsage> usages = new ArrayList<>();
 
     // 플랜 변경 이력
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -92,5 +89,13 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return getDisplayName();
+    }
+
+    public void assignMetaData(MetaData metaData) {
+        this.metaData = metaData;
+    }
+
+    public void assignMemberShip(MemberShip memberShip) {
+        this.memberShip = memberShip;
     }
 }

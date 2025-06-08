@@ -38,7 +38,7 @@ public class RagChatProcessor {
         try {
             return parseChatResult(generated.getOutput().getText());
         } catch (JsonMappingException e) {
-            throw new JsonErrorException(ErrorCode.JSON_MAPPING_ERROR);
+            throw new JsonErrorException(ErrorCode.SERVER_ERROR);
         } catch (Exception e) {
             // 다른 예외 처리 (예: 로그 남기기)
             throw new RuntimeException("Unexpected error during chat processing", e);

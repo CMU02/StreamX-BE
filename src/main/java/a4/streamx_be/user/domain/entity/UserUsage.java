@@ -10,13 +10,13 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Usage {
+public class UserUsage {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // User FK
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_uid", referencedColumnName = "uid", nullable = false)
+    @JoinColumn(name = "user_uid", referencedColumnName = "user_uid", nullable = false)
     private User user;
 
     // 집계 단위: 일 (UTC)
@@ -30,4 +30,12 @@ public class Usage {
     // TTS 사용 카운트
     @Column(nullable = false)
     private Long ttsCount = 0L;
+
+    public void changeChatCount(Long count) {
+        chatCount += count;
+    }
+
+    public void changeTtsCount(Long count) {
+        ttsCount += count;
+    }
 }
