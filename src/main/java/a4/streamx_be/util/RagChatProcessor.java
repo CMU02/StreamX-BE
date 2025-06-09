@@ -1,7 +1,6 @@
 package a4.streamx_be.util;
 
 import a4.streamx_be.chat.domain.model.Emotion;
-import a4.streamx_be.chat.repository.RedisChatMemoryRepository;
 import a4.streamx_be.configuration.CharacterConfig;
 import a4.streamx_be.exception.ErrorCode;
 import a4.streamx_be.exception.JsonErrorException;
@@ -15,7 +14,6 @@ import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import reactor.util.function.Tuple3;
 import reactor.util.function.Tuples;
@@ -27,8 +25,6 @@ public class RagChatProcessor {
     private final VectorStore vectorStore;
     private final CharacterConfig charConfig;
     private final ObjectMapper mapper;
-    private final RedisChatMemoryRepository redisRepository;
-    private final RedisTemplate<String, String> defaultRedisTemplate;
 
     public Tuple3<String, Emotion, String> processRagChat(String message, String userUid) {
 //        // 단기 메모리 구성 : Redis + 최근 10개 메세지 유지
