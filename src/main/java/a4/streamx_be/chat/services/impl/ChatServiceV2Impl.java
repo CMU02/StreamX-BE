@@ -38,6 +38,6 @@ public class ChatServiceV2Impl implements ChatService<AIReqDtoV2, AIResDtoV3> {
                         .filter(s -> s.supports(ChatType.RAG_TTS))
                         .findFirst()
                         .orElseThrow(() -> new NotFoundException(ErrorCode.RAG_TTS_NOT_SUPPORT))
-                        .execute(dto));
+                        .execute(dto, findUser.getUid().toString()));
     }
 }
