@@ -50,17 +50,12 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             throw new OAuth2AuthenticationException("이메일 정보를 받아올 수 없습니다.");
         }
 
-        // ✅ 기존 유저 존재 여부 확인
+        // 기존 사용자 확인 또는 새 사용자 생성
         Optional<User> existingUser = userRepository.findByEmail(email);
-        User user;
-
-        if (existingUser.isPresent()) {
-            user = existingUser.get();
-            // 저장하지 않고 그대로 반환 (단, 메타데이터 갱신 등은 필요시 추가 가능)
-        } else {
-            user = oauth2UserBuilder(provider, providerId, name, email, picture);
-            userRepository.save(user);
-        }
+        User user = existingUser.orElseGet(() -> {
+            User newUser = oauth2UserBuilder(provider, providerId, name, email, picture);
+            return userRepository.save(newUser);
+        });
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
