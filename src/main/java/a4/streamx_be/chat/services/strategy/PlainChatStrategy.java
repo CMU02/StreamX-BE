@@ -25,8 +25,8 @@ public class PlainChatStrategy implements ChatStrategy<AIReqDtoV1, AIResDtoV3> {
     }
 
     @Override
-    public Flux<AIResDtoV3> execute(AIReqDtoV1 dto) {
-        return Mono.fromCallable(() -> processor.processRagChat(dto.message()))
+    public Flux<AIResDtoV3> execute(AIReqDtoV1 dto, String userUid) {
+        return Mono.fromCallable(() -> processor.processRagChat(dto.message(), userUid))
         .map(tuple ->
                 AIResDtoV3.builder()
                         .aiText(tuple.getT1())

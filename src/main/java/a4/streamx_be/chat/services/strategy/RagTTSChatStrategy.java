@@ -29,8 +29,8 @@ public class RagTTSChatStrategy implements ChatStrategy<AIReqDtoV2, AIResDtoV3> 
     }
 
     @Override
-    public Flux<AIResDtoV3> execute(AIReqDtoV2 dto) {
-        return Mono.fromCallable(() -> processor.processRagChat(dto.message()))
+    public Flux<AIResDtoV3> execute(AIReqDtoV2 dto, String userUid) {
+        return Mono.fromCallable(() -> processor.processRagChat(dto.message(), userUid))
             // 블로킹 작업은 boundedElastic 스케줄러에서 실행
             .subscribeOn(Schedulers.boundedElastic())
             // 3. Feign TTS Server 호출 (또 다른 블로킹)

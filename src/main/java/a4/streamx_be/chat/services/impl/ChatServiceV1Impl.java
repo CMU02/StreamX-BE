@@ -37,7 +37,7 @@ public class ChatServiceV1Impl implements ChatService<AIReqDtoV1, AIResDtoV3> {
                         .filter(s -> s.supports(ChatType.PLAIN_RAG))
                         .findFirst()
                         .orElseThrow(() -> new NotFoundException(ErrorCode.PLAN_RAG_NOT_SUPPORT))
-                        .execute(dto)
+                        .execute(dto, findUser.getUid().toString())
                 );
     }
 }

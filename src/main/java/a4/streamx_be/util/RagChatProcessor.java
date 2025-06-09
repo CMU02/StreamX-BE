@@ -11,17 +11,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
-import org.springframework.ai.chat.messages.Message;
-import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import reactor.util.function.Tuple3;
 import reactor.util.function.Tuples;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -30,12 +27,25 @@ public class RagChatProcessor {
     private final VectorStore vectorStore;
     private final CharacterConfig charConfig;
     private final ObjectMapper mapper;
+    private final RedisChatMemoryRepository redisRepository;
+    private final RedisTemplate<String, String> defaultRedisTemplate;
 
-    public Tuple3<String, Emotion, String> processRagChat(String message) {
-        Generation generated = ChatClient.builder(chatModel).build()
-                .prompt()
+    public Tuple3<String, Emotion, String> processRagChat(String message, String userUid) {
+//        // 단기 메모리 구성 : Redis + 최근 10개 메세지 유지
+//        RedisChatMemory memory = RedisChatMemory.builder()
+//                .chatMemoryRepository(redisRepository)
+//                .maxMessages(10)
+//                .build();
+//
+//        // MemoryAdvisor 추가 : 단기 메모리
+//        MessageChatMemoryAdvisor memoryAdvisor = MessageChatMemoryAdvisor.builder(memory)
+//                .conversationId(userUid)
+//                .build();
+
+        // defaultAdvisors : 단기 메모리
+        Generation generated = ChatClient.builder(chatModel).defaultAdvisors().build()
+                .prompt(charConfig.getMiyoSystemTemplateV2NoRag())
                 .user(message)
-                .advisors(RagAdvisor())
                 .call()
                 .chatResponse()
                 .getResult();
