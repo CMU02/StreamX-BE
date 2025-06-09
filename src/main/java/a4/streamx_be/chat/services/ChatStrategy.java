@@ -10,5 +10,5 @@ import reactor.core.publisher.Flux;
  */
 public interface ChatStrategy<REQ, RES> {
     Boolean supports(ChatType type);
-    Flux<RES> execute(REQ dto);
+    Flux<RES> execute(REQ dto, String userUid);
 }
