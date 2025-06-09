@@ -1,6 +1,7 @@
 package a4.streamx_be.util;
 
 import a4.streamx_be.chat.domain.model.Emotion;
+import a4.streamx_be.chat.repository.RedisChatMemoryRepository;
 import a4.streamx_be.configuration.CharacterConfig;
 import a4.streamx_be.exception.ErrorCode;
 import a4.streamx_be.exception.JsonErrorException;
@@ -10,6 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -17,6 +20,8 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Component;
 import reactor.util.function.Tuple3;
 import reactor.util.function.Tuples;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -30,7 +35,7 @@ public class RagChatProcessor {
         Generation generated = ChatClient.builder(chatModel).build()
                 .prompt()
                 .user(message)
-                .advisors(advisor())
+                .advisors(RagAdvisor())
                 .call()
                 .chatResponse()
                 .getResult();
@@ -46,7 +51,7 @@ public class RagChatProcessor {
     }
 
     // VectorStore, SearchRequest, 프롬프트 템플릿 설정 및 Advisor 객체 리턴
-    private QuestionAnswerAdvisor advisor() {
+    private QuestionAnswerAdvisor RagAdvisor() {
         return QuestionAnswerAdvisor.builder(vectorStore)
                 .searchRequest(
                         SearchRequest.builder()
