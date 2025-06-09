@@ -32,7 +32,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String token = jwtTokenProvider.generateToken(email);
 
         // PC Test URL 작성
-        String redirectUri = "http://localhost:5000/oauth/callback?token=" + token;
+        String redirectUri = "http://localhost:5173/oauth/callback?token=" + token;
 
         response.sendRedirect(redirectUri);
     }

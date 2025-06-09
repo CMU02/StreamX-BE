@@ -31,19 +31,23 @@ public class SecurityConfig {
                                 "/login/**",
                                 "/oauth2/**",
                                 "/api/user/me",
-                                "/api/auth/*",
+                                "/api/auth/**", // ✅ 수정 완료: 모든 인증 API 허용
                                 "/ai/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(e -> e
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(401); // ❗ 리다이렉트 방지, 401만 응답
+                        })
+                )
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
                         .successHandler(oAuth2SuccessHandler)
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // ✅ JWT 인증 필터 등록
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
