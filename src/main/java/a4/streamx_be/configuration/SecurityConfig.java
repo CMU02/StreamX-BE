@@ -31,6 +31,7 @@ public class SecurityConfig {
                                 "/login/**",
                                 "/oauth2/**",
                                 "/api/user/me",
+                                "/api/user/usage",
                                 "/api/auth/**", // ✅ 수정 완료: 모든 인증 API 허용
                                 "/ai/**"
                         ).permitAll()
