@@ -26,7 +26,7 @@ public class RedisConfig {
                 .build();
 
         RedisStandaloneConfiguration config
-                = new RedisStandaloneConfiguration("localhost", 6379);
+                = new RedisStandaloneConfiguration("127.0.0.1", 6379);
 
         return new LettuceConnectionFactory(config, client);
     }

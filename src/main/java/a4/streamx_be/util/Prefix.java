@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Prefix {
-    USAGE("usage");
+    USAGE("usage"),
+    CHAT_MEMORY("chat:memory:");
 
     private final String value;
 }
