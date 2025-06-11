@@ -12,7 +12,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create # 베타 버전 배포시 validate로 변경
+      ddl-auto: validate # 베타 버전 배포시 validate로 변경
     properties:
       hibernate:
         show_sql: false
