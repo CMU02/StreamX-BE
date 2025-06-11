@@ -31,8 +31,14 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         // JWT 토큰 생성
         String token = jwtTokenProvider.generateToken(email);
 
+        String scheme = request.getScheme();      // "http" or "https"
+        String domain = request.getServerName();  // "stream.cieloblue.co.kr"
+        int port = request.getServerPort();       // 80 or 443 or custom
+
+        String baseUrl = scheme + "://" + domain +
+                ((scheme.equals("http") && port == 80) || (scheme.equals("https") && port == 443) ? "" : ":" + port);
         // PC Test URL 작성
-        String redirectUri = "http://localhost:5173/oauth/callback?token=" + token;
+        String redirectUri = baseUrl + "/oauth/callback?token=" + token;
 
         response.sendRedirect(redirectUri);
     }
