@@ -35,3 +35,5 @@ spring:
         project-id: ${PINECONE_PROJECT_ID}
         environment: ${PINECONE_REGION}
         index-name: stream-x
+server:
+  forward-headers-strategy: framework
