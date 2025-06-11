@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -45,9 +46,16 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String email = (String) attributes.get("email");
         String picture = attributes.get("picture") != null ? attributes.get("picture").toString() : null;
 
-        // 사용자 저장 또는 조회
-        User user = oauth2UserBuilder(provider, providerId, name, email, picture);
-        userRepository.save(user);
+        if (email == null) {
+            throw new OAuth2AuthenticationException("이메일 정보를 받아올 수 없습니다.");
+        }
+
+        // 기존 사용자 확인 또는 새 사용자 생성
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        User user = existingUser.orElseGet(() -> {
+            User newUser = oauth2UserBuilder(provider, providerId, name, email, picture);
+            return userRepository.save(newUser);
+        });
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
