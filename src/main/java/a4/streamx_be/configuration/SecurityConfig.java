@@ -30,6 +30,7 @@ public class SecurityConfig {
                                 "/login",
                                 "/login/**",
                                 "/oauth2/**",
+                                "/oauth/callback",
                                 "/api/user/me",
                                 "/api/auth/**", // ✅ 수정 완료: 모든 인증 API 허용
                                 "/ai/**"
