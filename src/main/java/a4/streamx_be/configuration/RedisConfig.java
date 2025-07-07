@@ -24,9 +24,9 @@ public class RedisConfig {
                 .commandTimeout(Duration.ofSeconds(2))
                 .shutdownTimeout(Duration.ZERO)
                 .build();
-
+        // TODO: 추후 ElasticCache를 사용할 경우 호스트이름과 포트 변경 필요
         RedisStandaloneConfiguration config
-                = new RedisStandaloneConfiguration("127.0.0.1", 6379);
+                = new RedisStandaloneConfiguration("localhost", 6379);
 
         return new LettuceConnectionFactory(config, client);
     }

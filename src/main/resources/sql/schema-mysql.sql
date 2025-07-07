@@ -1,0 +1,7 @@
+CREATE TABLE SPRING_AI_CHAT_MEMORY (
+    conversation_id VARCHAR(36) NOT NULL,
+    content TEXT NOT NULL,
+    type ENUM('USER','ASSISTANT','SYSTEM','TOOL') NOT NULL,
+    timestamp TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX IDX_CHAT_MEMORY (conversation_id, timestamp)
+);
