@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk as builder
+FROM eclipse-temurin:21-jdk AS builder
 
 ARG MYSQL_URL
 ARG MYSQL_USERNAME
@@ -38,8 +38,8 @@ RUN ./gradlew clean build -x test
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
-COPY --from=builder /app/build/libs/*.jar /app/streamx-0.0.5-SNAPSHOT.jar
+COPY --from=builder /app/build/libs/*.jar /app/streamx-0.0.5-RC1.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "streamx-0.0.5-SNAPSHOT.jar", "--spring.profiles.active=product"]
+ENTRYPOINT ["java", "-jar", "streamx-0.0.5-RC1.jar", "--spring.profiles.active=product"]

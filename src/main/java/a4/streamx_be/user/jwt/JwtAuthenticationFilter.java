@@ -29,6 +29,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+        System.out.println("🔍 요청 경로: " + path); // 요청 경로 확인
+
+        // 인증 없이 허용할 경로 (로그 추가 포함)
+        if (path.startsWith("/api/auth")) {
+            System.out.println("✅ JWT 필터 우회 경로 통과됨: " + path);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
@@ -54,6 +64,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     }
                 }
             } catch (JwtException ex) {
+                System.out.println("❌ JWT 검증 실패: " + ex.getMessage());
+                // 실패 시 아무 인증 없이 통과 → response는 이후 시큐리티가 처리
             }
         }
 

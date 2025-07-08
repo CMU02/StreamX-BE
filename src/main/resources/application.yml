@@ -12,7 +12,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create # 베타 버전 배포시 validate로 변경
+      ddl-auto: validate # 베타 버전 배포시 validate로 변경
     properties:
       hibernate:
         show_sql: false
@@ -41,3 +41,5 @@ spring:
         project-id: ${PINECONE_PROJECT_ID}
         environment: ${PINECONE_REGION}
         index-name: stream-x
+server:
+  forward-headers-strategy: framework
