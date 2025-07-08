@@ -8,8 +8,13 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
+import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryRepository;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -18,6 +23,7 @@ import org.springframework.stereotype.Component;
 import reactor.util.function.Tuple3;
 import reactor.util.function.Tuples;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RagChatProcessor {
@@ -25,22 +31,24 @@ public class RagChatProcessor {
     private final VectorStore vectorStore;
     private final CharacterConfig charConfig;
     private final ObjectMapper mapper;
+    private final JdbcChatMemoryRepository jdbcChatMemoryRepository;
 
     public Tuple3<String, Emotion, String> processRagChat(String message, String userUid) {
-//        // 단기 메모리 구성 : Redis + 최근 10개 메세지 유지
-//        RedisChatMemory memory = RedisChatMemory.builder()
-//                .chatMemoryRepository(redisRepository)
-//                .maxMessages(10)
-//                .build();
-//
-//        // MemoryAdvisor 추가 : 단기 메모리
-//        MessageChatMemoryAdvisor memoryAdvisor = MessageChatMemoryAdvisor.builder(memory)
-//                .conversationId(userUid)
-//                .build();
+        // AI 대화 메모리 구성 : MySQL + 최근 메세지 20개 유지
+        MessageWindowChatMemory memory = MessageWindowChatMemory.builder()
+                .chatMemoryRepository(jdbcChatMemoryRepository)
+                .maxMessages(20)
+                .build();
 
-        // defaultAdvisors : 단기 메모리
-        Generation generated = ChatClient.builder(chatModel).defaultAdvisors().build()
+        // MemoryAdvisor 추가 : JDBC 메모리
+        MessageChatMemoryAdvisor memoryAdvisor = MessageChatMemoryAdvisor.builder(memory)
+                .conversationId(userUid)
+                .build();
+
+        // defaultAdvisors : JDBC 메모리
+        Generation generated = ChatClient.builder(chatModel).defaultAdvisors(memoryAdvisor).build()
                 .prompt(charConfig.getMiyoSystemTemplateV2NoRag())
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userUid))
                 .user(message)
                 .call()
                 .chatResponse()
