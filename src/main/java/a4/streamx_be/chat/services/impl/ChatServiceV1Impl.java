@@ -32,7 +32,7 @@ public class ChatServiceV1Impl implements ChatService<AIReqDtoV1, AIResDtoV3> {
                         userRepository.findByUid(user.getUid())
                                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND)))
                 .subscribeOn(Schedulers.boundedElastic())
-                .doOnNext(usageService::recordChatUsage)
+//                .doOnNext(usageService::recordChatUsage)
                 .flatMapMany(findUser -> strategies.stream()
                         .filter(s -> s.supports(ChatType.PLAIN_RAG))
                         .findFirst()

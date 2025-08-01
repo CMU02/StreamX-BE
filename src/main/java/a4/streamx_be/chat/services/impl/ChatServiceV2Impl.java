@@ -32,8 +32,8 @@ public class ChatServiceV2Impl implements ChatService<AIReqDtoV2, AIResDtoV3> {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND)))
                 .subscribeOn(Schedulers.boundedElastic())
                 .doOnNext(userData -> {
-                    usageService.recordChatUsage(userData);
-                    usageService.recordTtsUsage(userData);
+//                    usageService.recordChatUsage(userData);
+//                    usageService.recordTtsUsage(userData);
                 }).flatMapMany(findUser -> strategies.stream()
                         .filter(s -> s.supports(ChatType.RAG_TTS))
                         .findFirst()
