@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Map;
 
-@FeignClient(name = "tts-service", url = "http://${tts.api.url}")
+@FeignClient(name = "tts-service", url = "${tts.api.url}")
 public interface FeignTTSClient {
     @PostMapping("/tts")
     Map<String, Object> synthesize(@RequestBody Map<String, String> requestBody);
